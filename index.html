@@ -43,6 +43,11 @@
             <div class="row row-header">
                 <div class="col-12 col-sm-6">
                     <h1>071 Front End Schedule</h1>
+                    <h4><span id="_date"></span></h4>
+                    <script>
+                      var d = new Date();
+                      document.getElementById("_date").innerHTML = d.toLocaleDateString();
+                    </script>
                 </div>
                 <div class="col-12 col-sm">
                 </div>
@@ -53,13 +58,13 @@
     <div class="container">
         <div class="row row-content align-items-center">
             <div class="col-12 col-sm-4 order-sm-last col-md-3">
-                <h3><span id="datetime"></span></h3>
+                <h3><span id="_time"></span></h3>
                 <script>
                   var myVar = setInterval(myTimer, 1000);
 
                   function myTimer() {
                   var d = new Date();
-                  document.getElementById("datetime").innerHTML = d.toLocaleTimeString();}
+                  document.getElementById("_time").innerHTML = d.toLocaleTimeString();}
                 </script>
             </div>
             <div class="col col-sm order-sm-first col-md">
