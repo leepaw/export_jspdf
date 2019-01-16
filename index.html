@@ -129,8 +129,8 @@
     <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="node_modules/jspdf/dist/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
-    <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.1/jspdf.debug.js"></script>
+    <!--script>
         function convertToPDF() {
         
             var doc = new jsPDF();
@@ -144,7 +144,15 @@
                 'width': 170,
                 'elementHandlers': specialElementHandlers
             });
-            doc.save('st071fe_schedule.pdf');
+            doc.save('st071_fe_schedule.pdf');
+        }
+    </script>-->
+    <script>
+        function convertToPDF() {
+            var doc = new jsPDF()
+
+            doc.text('Hello world!!', 10, 10)
+            doc.save('a4.pdf')
         }
     </script>
 </body>
