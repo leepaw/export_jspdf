@@ -57,7 +57,7 @@
 
     <div class="container">
         <div class="row row-content align-items-center">
-            <div class="col-12 col-sm-4 order-sm-last col-md-3">
+            <div id="editor" class="col-12 col-sm-4 order-sm-last col-md-3">
                 <h3><span id="_time"></span></h3>
                 <script>
                   var myVar = setInterval(myTimer, 1000);
@@ -67,7 +67,7 @@
                   document.getElementById("_time").innerHTML = d.toLocaleTimeString();}
                 </script>
             </div>
-            <div class="col col-sm order-sm-first col-md">
+            <div id="content" class="col col-sm order-sm-first col-md">
                 <h5>
                   <table id="t01">
                     <tr>
@@ -114,20 +114,38 @@
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-4 offset-1 col-sm-2">
+                <div class="col-4 offset-1 col-sm-4">
                     <h5>
                       <ul class="list-unstyled">
-                        <li><a href="#">Convert to PDF</a></li>
+                        <li><a href="javascript:convertToPDF()">Convert to PDF</a></li>
                       </ul>
                     </h5>
                 </div>
            </div>
         </div>
     </footer>
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS. -->
     <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="node_modules/jspdf/dist/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script>
+        function convertToPDF() {
+            var doc = new jsPDF();
+            var specialElementHandlers = {
+                '#editor': function (element, renderer) {
+                    return true;
+                }
+            };
+
+            doc.fromHTML($('#content').html(), 15, 15, {
+                'width': 170,
+                'elementHandlers': specialElementHandlers
+            });
+            doc.save('st071fe_schedule.pdf');
+        }
+    </script>
 </body>
 
 </html>
