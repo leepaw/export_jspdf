@@ -130,7 +130,7 @@
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.1/jspdf.debug.js"></script>
-    <!--script>
+    <script>
         function convertToPDF() {
         
             var doc = new jsPDF();
@@ -144,15 +144,7 @@
                 'width': 170,
                 'elementHandlers': specialElementHandlers
             });
-            doc.save('st071_fe_schedule.pdf');
-        }
-    </script>-->
-    <script>
-        function convertToPDF() {
-            var doc = new jsPDF()
-
-            doc.text('Hello world!!', 10, 10)
-            doc.save('a4.pdf')
+            doc.save('st071fe_schedule.pdf');
         }
     </script>
 </body>
