@@ -2,148 +2,19 @@
 <html lang="en">
 
 <head>
-    <style>
-        table {
-            width:100%;
-        }
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-        }
-        table#t01 tr:nth-child(even) {
-            background-color: #eee;
-        }
-        table#t01 tr:nth-child(odd) {
-            background-color: #fff;
-        }
-        table#t01 th {
-            background-color: black;
-            color: white;
-        }
-    </style>
-    <!-- Required meta tags always come first -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <title>071 Front End Schedule</title>
+    <title>Export PDF Example</title>
 </head>
 
 <body>
-
-    <header class="jumbotron">
-        <div class="container">
-            <div class="row row-header">
-                <div class="col-12 col-sm-6">
-                    <h1>071 Front End Schedule</h1>
-                    <h4><span id="_date"></span></h4>
-                    <script>
-                      var d = new Date();
-                      document.getElementById("_date").innerHTML = d.toLocaleDateString();
-                    </script>
-                </div>
-                <div class="col-12 col-sm">
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="row row-content align-items-center">
-            <div class="col-12 col-sm-4 order-sm-last col-md-3">
-                <h3><span id="_time"></span></h3>
-                <script>
-                  var myVar = setInterval(myTimer, 1000);
-
-                  function myTimer() {
-                  var d = new Date();
-                  document.getElementById("_time").innerHTML = d.toLocaleTimeString();}
-                </script>
-            </div>
-            <div id="content" class="col col-sm order-sm-first col-md">
-                <h5>
-                  <table id="t01">
-                    <tr>
-                        <th>Time</th>
-                        <th>Event</th> 
-                        <th>Name</th>
-                    </tr>
-                    <tr>
-                        <td>3:00 PM</td>
-                        <td>Home</td>
-                        <td>Kim P</td>
-                    </tr>
-                    <tr>
-                        <td>3:15 PM</td>
-                        <td>Lunch</td>
-                        <td>Jacob M</td>
-                    </tr>
-                    <tr>
-                        <td>3:30 PM</td>
-                        <td>Break</td>
-                        <td>Erica W</td>
-                    </tr>
-                    <tr>
-                        <td>3:30 PM</td>
-                        <td>Break</td>
-                        <td>Haley B(cafe)</td>
-                    </tr>
-                    <tr>
-                        <td>3:45 PM</td>
-                        <td>Lunch</td>
-                        <td>Casey S</td>
-                    </tr>
-                    <tr>
-                        <td>4:00 PM</td>
-                        <td>Home</td>
-                        <td>Terri C</td>
-                    </tr>
-                  </table> 
-                </h5>
-            </div>
+    <div>
+        <div>
+            <div></div>
         </div>
     </div>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-4 offset-1 col-sm-4">
-                    <h5>
-                        <button onclick="convertToPDF()">Convert to PDF</button>
-                    </h5>
-                </div>
-           </div>
-        </div>
-    </footer>
-
-    <!-- jQuery first, then Popper.js, then Bootstrap JS. -->
-    <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
-    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="node_modules/jspdf/dist/jspdf.debug.js"></script>
+    <form>
+    </form>
+    <button></button>
     <script>
-        function convertToPDF() {
-            var doc = new jsPDF();
-            var specialElementHandlers = {
-                '#editor': function (element, renderer) {
-                    return true;
-                }
-            };
-
-            doc.fromHTML($('#content').html(), 15, 15, {
-                'width': 170,
-                'elementHandlers': specialElementHandlers
-            });
-            doc.save('st071fe_schedule.pdf');
-        }
     </script>
 </body>
-
 </html>

@@ -8,4 +8,4 @@ app.get('*', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-app.listen(PORT, () => console.log(`Web App Listening on ${ PORT }`));
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
