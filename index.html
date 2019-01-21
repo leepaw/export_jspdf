@@ -11,6 +11,11 @@
     <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
     <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
+    <style>
+        .pdfobject-container { height: 500px;}
+        .pdfobject { border: 1px solid #666; }
+    </style>
 </head>
 
 <body>
@@ -28,7 +33,7 @@
 <div class="container" style="padding:10px 10px;">
     <form class="form-inline">
         <div class="form-group">
-            <button id="submit-file" type="submit" class="btn btn-lg btn-space clearfix" style="background:#3399ff;color:white">
+            <button type="submit" id="submit-file" class="btn btn-lg btn-space clearfix" style="background:#3399ff;color:white">
                 <span class="fa fa-upload"></span> Load File
             </button>
         </div>
@@ -38,11 +43,7 @@
         </div>
     </form>
     <br>
-<!--
-    <button id="uploadButton" class="btn btn-lg btn-space clearfix" style="background:#3399ff;color:white">
-        <span class="fa fa-upload"></span> Upload CSV file
-    </button>
--->
+
     <button id="exportButton" class="btn btn-lg btn-space btn-danger clearfix">
         <span class="fa fa-file-pdf-o"></span> Export to PDF
     </button>
@@ -50,7 +51,7 @@
     <br>
     <div id="header"></div>
     <div class="well">
-        <div class="row" id="csv-display" style="height:500px;overflow: scroll;">
+        <div class="row" id="parsed_csv_list" style="height:500px;overflow: scroll;">
         </div>
     </div>
 <!--
@@ -103,6 +104,7 @@
 <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
 <script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script>
 
+<!--
 <script type="text/javascript">
     $('#submit-file').on("click",function(e){
         e.preventDefault();
@@ -159,6 +161,54 @@
                 }
             }
         });
+    });
+</script>
+-->
+
+<script type="text/javascript">
+    $(document).ready(function(){
+      
+      $('#submit-file').on("click",function(e){
+          e.preventDefault();
+          $('#files').parse({
+              config: {
+                  delimiter: "auto",
+                  complete: displayHTMLTable,
+              },
+              before: function(file, inputElem)
+              {
+                  //console.log("Parsing file...", file);
+              },
+              error: function(err, file)
+              {
+                  //console.log("ERROR:", err, file);
+              },
+              complete: function()
+              {
+                  //console.log("Done with all files");
+              }
+          });
+      });
+      
+      function displayHTMLTable(results){
+          var table = '<table id="exportTable" class="table table-condensed table-hover table-striped">';
+          var data = results.data;
+           
+          for(i=0;i<data.length;i++){
+              table+= "<tr>";
+              var row = data[i];
+              var cells = row.join(",").split(",");
+               
+              for(j=0;j<cells.length;j++){
+                  table+= "<td>";
+                  table+= cells[j];
+                  table+= "</th>";
+              }
+              table+= "</tr>";
+          }
+          table+= "</table>";
+          $("#parsed_csv_list").html(table);
+      }
     });
 </script>
 
