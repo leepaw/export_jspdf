@@ -227,6 +227,7 @@
                     }
                 }
             });
+        
 
             // when parsing is done, export the data to PDF
             dataSource.read().then(function (data) {
@@ -242,7 +243,7 @@
                     50,
                     data,
                     [
-                        { field: "Name", title: "Person Name", width: 200 },
+                        { field: "Name", title: "First Name", width: 200 },
                         { field: "Age", title: "Age", width: 50 },
                         { field: "Email", title: "Email Address", width: 200 }
                     ],
