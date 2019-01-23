@@ -14,6 +14,7 @@
     -->
     <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.0/moment.js"></script>
     <style>
         .pdfobject-container { height: 500px;}
         .pdfobject { border: 1px solid #666; }
@@ -80,6 +81,7 @@
                 },
                 error: function(err, file)
                 {
+
                     //console.log("ERROR:", err, file);
                 },
                 complete: function()
@@ -89,33 +91,99 @@
             });
         });
 
+  
+
         function generateFormat(results) {
               
-            var data = results.data;
-            var arr = [];
-    
-            var arr1 = ['8:15am', 'Break', 'Sopea', ''];
-            var arr2 = ['9:30am', 'Lunch', 'Marylin', ''];
-            var arr3 = ['9:30am', 'Break', 'Veronica', ''];
-            var arr4 = ['10:15am', 'Break', '# Kali C', ''];
-            var arr5 = ['10:15am', 'Lunch', 'Theresa', 'cafe'];
-            var arr6 = ['10:45am', 'Lunch', 'Sopea', ''];
-            var arr7 = ['10:45am', 'Break', '$ Dolma', ''];
-            var arr8 = ['10:45am', 'Break', '# Briana L', ''];
-
-            arr.push(arr1);
-            arr.push(arr2);
-            arr.push(arr3);
-            arr.push(arr4);
-            arr.push(arr5);
-            arr.push(arr6);
-            arr.push(arr7);
-            arr.push(arr8);
-            arr.join();
+            var csv_data = results.data;
             
+            /*for(i=0;i<csv_data.length;i++){
+                var row_ = csv_data[i];
+                var cells_ = row_.join(",").split(",");
+                
+                for(j=0;j<cells_.length;j++){
+                    if (j==0) {
+                        alert(cells_[j]);
+                        var arr = [];
+                        arr.push(addColon(cells_[1]));
+                        arr.push(addColon(cells_[2]));
+                        alert(getDiff(arr));
+                    }
+            
+                }
+            } */
 
-            displayHTMLTable(arr);
+            //var arr = [];
+            //arr.push("2000");
+            //arr.push("000");
+            //alert(getDiff2(arr));
+
+            //displayHTMLTable(arr);
         }
+
+        // input must be military time: input[0] is starttime 
+        // and input[1] is endtime
+        // returns a float point number for total hours and minutes (e.g. 7.5)
+        function getDiff2(input) {
+            var startTime = addColon(input[0]);
+            var endTime = addColon(input[1]);
+            var startTimeHour = startTime.split(":")[0];
+            var startTimeMins = startTime.split(":")[1];
+            var endTimeHour = endTime.split(":")[0];
+            var endTimeMins = endTime.split(":")[1];
+
+            var date1 = new Date(2000, 0, 1, 
+               parseInt(startTimeHour), parseInt(startTimeMins));  // start time
+            var date2 = new Date(2000, 0, 1, 
+               parseInt(endTimeHour), parseInt(endTimeMins));   // end time
+
+            if (date2 < date1) {
+                date2.setDate(date2.getDate() + 1);
+            }
+            var diff_msec = date2 - date1;
+        
+            var diff_hh = Math.floor(diff_msec / 1000 / 60 /60);
+    
+            diff_msec -= diff_hh * 1000 * 60 * 60;
+            var diff_mm = Math.floor(diff_msec / 1000 / 60);
+
+            var diff_result = diff_hh + diff_mm/60.0;
+            return diff_result;
+        }
+
+        // input must be military time: input[0] is starttime 
+        // and input[1] is endtime
+        // returns a float point number for total hours and minutes (e.g. 7.5)
+        function getDiff(input) {
+            var startTime = moment(input[0], 'H:mm');
+            var endTime = moment(input[1], 'H:mm');
+
+            var hrs = endTime.diff(startTime, 'hours');
+            var mins = moment.utc(
+                   moment(endTime, 'H:mm').diff(
+                   moment(startTime, 'H:mm'))).format("mm");
+
+            var diffResult = parseFloat(hrs) + parseFloat(mins)/60;
+            return diffResult;
+        }
+
+
+        function addColon(input) {
+            var foo = input;
+            var res_ = foo.slice(0,-2) +":"+foo.slice(-2);
+            return res_;
+        }
+    
+
+        function toStandardTime(input) {
+            return moment(input, 'H:mm').format('h:mm A');
+
+        }
+
+        function toMilitaryTime(input) {
+            return moment(input, 'h:mm A').format('H:mm');
+        }
+
         
         function displayHTMLTable(results){
             var table = '<table id="exportTable" class="table table-condensed table-hover table-striped">';
