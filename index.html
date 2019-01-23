@@ -71,7 +71,8 @@
             $('#files').parse({
                 config: {
                     delimiter: "auto",
-                    complete: displayHTMLTable,
+                    //complete: displayHTMLTable,
+                    complete: generateFormat,
                 },
                 before: function(file, inputElem)
                 {
@@ -87,10 +88,39 @@
                 }
             });
         });
+
+        function generateFormat(results) {
+              
+            var data = results.data;
+            var arr = [];
+    
+            var arr1 = ['8:15am', 'Break', 'Sopea', ''];
+            var arr2 = ['9:30am', 'Lunch', 'Marylin', ''];
+            var arr3 = ['9:30am', 'Break', 'Veronica', ''];
+            var arr4 = ['10:15am', 'Break', '# Kali C', ''];
+            var arr5 = ['10:15am', 'Lunch', 'Theresa', 'cafe'];
+            var arr6 = ['10:45am', 'Lunch', 'Sopea', ''];
+            var arr7 = ['10:45am', 'Break', '$ Dolma', ''];
+            var arr8 = ['10:45am', 'Break', '# Briana L', ''];
+
+            arr.push(arr1);
+            arr.push(arr2);
+            arr.push(arr3);
+            arr.push(arr4);
+            arr.push(arr5);
+            arr.push(arr6);
+            arr.push(arr7);
+            arr.push(arr8);
+            arr.join();
+            
+
+            displayHTMLTable(arr);
+        }
         
         function displayHTMLTable(results){
             var table = '<table id="exportTable" class="table table-condensed table-hover table-striped">';
-            var data = results.data;
+            //var data = results.data;
+            var data = results;
             
             for(i=0;i<data.length;i++){
                 table+= "<tr>";
@@ -100,13 +130,14 @@
                 for(j=0;j<cells.length;j++){
                     table+= "<td>";
                     table+= cells[j];
-                    table+= "</th>";
+                    table+= "</td>";
                 }
                 table+= "</tr>";
             }
             table+= "</table>";
             $("#parsed_csv_list").html(table);
         }
+
         });
     </script>
 
