@@ -28,115 +28,115 @@
 <body>
 
 <div class="container">
-<br>
-<div class="page-header">
-    <h1>ST071 FE Schedule</h1>
-</div>
-<br>
-<!-- Export a Table to PDF - START -->
-<link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
-<link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <br>
+    <div class="page-header">
+        <h1>ST071 FE Schedule</h1>
+    </div>
+    <br>
+    <!-- Export a Table to PDF - START -->
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
-<div class="container" style="padding:10px 10px;">
-    <form class="form-inline">
-        <div class="form-group">
-            <button type="submit" id="submit-file" class="btn btn-lg btn-space clearfix" style="background:#3399ff;color:white">
-                <span class="fa fa-upload"></span> Load File
-            </button>
-        </div>
-        <div class="form-group">
-            <label for="files"> </label>
-            <input type="file" id="files" class="form-control" accept=".csv" required />
-        </div>
-    </form>
-    <br>
+    <div class="container" style="padding:10px 10px;">
+        <form class="form-inline">
+            <div class="form-group">
+                <button type="submit" id="submit-file" class="btn btn-lg btn-space clearfix" style="background:#3399ff;color:white">
+                    <span class="fa fa-upload"></span> Load File
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="files"> </label>
+                <input type="file" id="files" class="form-control" accept=".csv" required />
+            </div>
+        </form>
+        <br>
 
-    <button id="exportButton" class="btn btn-lg btn-space btn-danger clearfix">
-        <span class="fa fa-file-pdf-o"></span> Export to PDF
-    </button>
-    <br>
-    <br>
-    <div id="header"></div>
-    <div class="well">
-        <div class="row" id="parsed_csv_list" style="height:500px;overflow: scroll;">
+        <button id="exportButton" class="btn btn-lg btn-space btn-danger clearfix">
+            <span class="fa fa-file-pdf-o"></span> Export to PDF
+        </button>
+        <br>
+        <br>
+        <div id="header"></div>
+        <div class="well">
+            <div class="row" id="parsed_csv_list" style="height:500px;overflow: scroll;">
+            </div>
         </div>
     </div>
-</div>
 
-<script type="text/javascript">
-    $(document).ready(function(){
-      
-      $('#submit-file').on("click",function(e){
-          e.preventDefault();
-          $('#files').parse({
-              config: {
-                  delimiter: "auto",
-                  complete: displayHTMLTable,
-              },
-              before: function(file, inputElem)
-              {
-                  //console.log("Parsing file...", file);
-              },
-              error: function(err, file)
-              {
-                  //console.log("ERROR:", err, file);
-              },
-              complete: function()
-              {
-                  //console.log("Done with all files");
-              }
-          });
-      });
-      
-      function displayHTMLTable(results){
-          var table = '<table id="exportTable" class="table table-condensed table-hover table-striped">';
-          var data = results.data;
-           
-          for(i=0;i<data.length;i++){
-              table+= "<tr>";
-              var row = data[i];
-              var cells = row.join(",").split(",");
-               
-              for(j=0;j<cells.length;j++){
-                  table+= "<td>";
-                  table+= cells[j];
-                  table+= "</th>";
-              }
-              table+= "</tr>";
-          }
-          table+= "</table>";
-          $("#parsed_csv_list").html(table);
-      }
-    });
-</script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        
+        $('#submit-file').on("click",function(e){
+            e.preventDefault();
+            $('#files').parse({
+                config: {
+                    delimiter: "auto",
+                    complete: displayHTMLTable,
+                },
+                before: function(file, inputElem)
+                {
+                    //console.log("Parsing file...", file);
+                },
+                error: function(err, file)
+                {
+                    //console.log("ERROR:", err, file);
+                },
+                complete: function()
+                {
+                    //console.log("Done with all files");
+                }
+            });
+        });
+        
+        function displayHTMLTable(results){
+            var table = '<table id="exportTable" class="table table-condensed table-hover table-striped">';
+            var data = results.data;
+            
+            for(i=0;i<data.length;i++){
+                table+= "<tr>";
+                var row = data[i];
+                var cells = row.join(",").split(",");
+                
+                for(j=0;j<cells.length;j++){
+                    table+= "<td>";
+                    table+= cells[j];
+                    table+= "</th>";
+                }
+                table+= "</tr>";
+            }
+            table+= "</table>";
+            $("#parsed_csv_list").html(table);
+        }
+        });
+    </script>
 
-<script type="text/javascript">
-    jQuery(function ($) {
-        $("#exportButton").click(function () {
-            var sTable = document.getElementById('parsed_csv_list').innerHTML;
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("#exportButton").click(function () {
+                var sTable = document.getElementById('parsed_csv_list').innerHTML;
 
-            var style = "<style>";
-            style = style + "table {width: 100%;font: 17px Calibri;}";
-            style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
-            style = style + "padding: 12px 10px;text-align: center;}";
-            style = style + "</style>";
+                var style = "<style>";
+                style = style + "table {width: 100%;font: 17px Calibri;}";
+                style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
+                style = style + "padding: 12px 10px;text-align: center;}";
+                style = style + "</style>";
 
-            // CREATE A WINDOW OBJECT.
-            var win = window.open('', '', 'height=700,width=700');
-            win.document.write('<html><head>');
-            //win.document.write('<title>Schedule</title>');   // <title> FOR PDF HEADER.
-            win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
-            win.document.write('</head>');
-            win.document.write('<body>');
-            win.document.write(sTable);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
-            win.document.write('</body></html>');
+                // CREATE A WINDOW OBJECT.
+                var win = window.open('', '', 'height=700,width=700');
+                win.document.write('<html><head>');
+                //win.document.write('<title>Schedule</title>');   // <title> FOR PDF HEADER.
+                win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
+                win.document.write('</head>');
+                win.document.write('<body>');
+                win.document.write(sTable);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
+                win.document.write('</body></html>');
 
-            win.document.close(); 	// CLOSE THE CURRENT WINDOW.
+                win.document.close(); 	// CLOSE THE CURRENT WINDOW.
 
-            win.print();    // PRINT THE CONTENTS.
-        });  
-    });
-</script>
+                win.print();    // PRINT THE CONTENTS.
+            });  
+        });
+    </script>
 
 <!-- you need to include the shieldui css and js assets in order for the components to work 
 <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
