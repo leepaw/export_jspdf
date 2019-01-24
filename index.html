@@ -147,17 +147,27 @@
                     new_event.push(curr_cashier_events.description[i]);
                     new_event.push(curr_cashier_events.name);
                     new_event.push(curr_cashier_events.assignment);
-                    all_events.push(new_event);
-                    datetime_idx.push(curr_cashier_events.datetime[i]);
-                }
+
+                    var previous_length = all_events.length;
+                    var dt = curr_cashier_events.datetime[i];
+
+                    for (let j=0; j<all_events.length; j++) {
+                        if (dt.getTime() <= datetime_idx[j].getTime()) {  
+                            all_events.splice(j, 0, new_event);
+                            datetime_idx.splice(j, 0, dt);
+                            break;
+                        }
+                    } 
+
+                    if (previous_length == all_events.length) {
+                        all_events.push(new_event);
+                        datetime_idx.push(curr_cashier_events.datetime[i]);
+                    }
+                } // for each events (i.e break/lunch/home) in a cashier's shift
 
             } //for each cashier
 
             displayHTMLTable(all_events);
-
-            //for (q=0; q<all_events.length; q++) {
-                //alert(datetime_idx[q]);
-            //}
     
         }
 
