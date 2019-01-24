@@ -141,17 +141,21 @@
                 curr_cashier_events = generateEvents(arr);
                 curr_cashier_events.name = cashier_name;
                 curr_cashier_events.assignment = cashier_assignment;
-
                 
-                if (cashier_name == "Sopea" || cashier_name == "Marilyn") {
-                    for (let i=0; i<curr_cashier_events.datetime.length; i++) {
-                        new_event = [];   
-                        new_event.push(dateTimeToStandardFormat(curr_cashier_events.datetime[i]));
-                        new_event.push(curr_cashier_events.description[i]);
-                        new_event.push(curr_cashier_events.name);
-                        new_event.push(curr_cashier_events.assignment);
-                        all_events.push(new_event);
-                    }
+                if (cashier_assignment.indexOf('caf') !== -1) {
+                    curr_cashier_events.assignment = setCharAt(
+                                        cashier_assignment,
+                                        cashier_assignment.length-1,
+                                        '&#xE9;');
+                }
+
+                for (let i=0; i<curr_cashier_events.datetime.length; i++) {
+                    new_event = [];   
+                    new_event.push(dateTimeToStandardFormat(curr_cashier_events.datetime[i]));
+                    new_event.push(curr_cashier_events.description[i]);
+                    new_event.push(curr_cashier_events.name);
+                    new_event.push(curr_cashier_events.assignment);
+                    all_events.push(new_event);
                 }
 
             } //for-each cashier
@@ -472,6 +476,16 @@
             }
 
             return _str;
+        }
+
+        //
+        // Use this to replace certain characters with Unicode characters
+        //
+        // e.g. cafe needs an acute 'e'
+        //
+        function setCharAt(str,index,chr) {
+            if(index > str.length-1) return str;
+            return str.substr(0,index) + chr + str.substr(index+1);
         }
 
         
