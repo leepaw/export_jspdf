@@ -106,6 +106,7 @@
             var curr_cashier_events;
             
             var all_events = [];
+            var datetime_idx = [];
             var new_event;
             
             // for each cashier
@@ -150,17 +151,22 @@
                 }
 
                 for (let i=0; i<curr_cashier_events.datetime.length; i++) {
-                    new_event = [];   
+                    new_event = [];
                     new_event.push(dateTimeToStandardFormat(curr_cashier_events.datetime[i]));
                     new_event.push(curr_cashier_events.description[i]);
                     new_event.push(curr_cashier_events.name);
                     new_event.push(curr_cashier_events.assignment);
                     all_events.push(new_event);
+                    datetime_idx.push(curr_cashier_events.datetime[i]);
                 }
 
-            } //for-each cashier
+            } //for each cashier
 
             displayHTMLTable(all_events);
+
+            //for (q=0; q<all_events.length; q++) {
+                //alert(datetime_idx[q]);
+            //}
     
         }
 
@@ -193,11 +199,14 @@
 
             // get the DateTime objects for starting and stopping times
             var start_datetime = toDateTime(input[0]);
-            var stop_datetime = toDateTime(input[1]);            
+            var stop_datetime = toDateTime(input[1]);
+
+            // the stop time is past midnight, so we need to adjust
+            if (stop_datetime < start_datetime) {
+                stop_datetime.setDate(stop_datetime.getDate() + 1);
+            }
 
             var total_hrs = getDiff2(input);
-                
-            //dateTimeToMilitaryFormat
 
             switch (total_hrs) {
                 case 8.5:
@@ -208,9 +217,6 @@
                     break2_datetime = moment(
                             start_datetime).add(6, 'H').add(30, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
-                    //cashierIntervals.push(lunch_datetime);
-                    //cashierIntervals.push(break2_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.datetime.push(break2_datetime);
@@ -226,8 +232,6 @@
                     lunch_datetime = moment(
                             start_datetime).add(5, 'H').add(15, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
-                    //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Break");
@@ -241,8 +245,6 @@
                     lunch_datetime = moment(
                             start_datetime).add(4, 'H').add(45, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
-                    //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Break");
@@ -254,7 +256,6 @@
                     lunch_datetime = moment(
                             start_datetime).add(3, 'H').add(15, 'm').toDate();
 
-                    //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Lunch");
                     break;
@@ -264,7 +265,6 @@
                     lunch_datetime = moment(
                             start_datetime).add(3, 'H').add(0, 'm').toDate();
 
-                    //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Lunch");
                     break;
@@ -274,7 +274,6 @@
                     lunch_datetime = moment(
                             start_datetime).add(2, 'H').add(45, 'm').toDate();
 
-                    //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Lunch");
                     break;
@@ -283,7 +282,6 @@
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(45, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
                     break;
@@ -293,7 +291,6 @@
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(30, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
                     break;
@@ -303,7 +300,6 @@
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(15, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
                     break;
@@ -313,7 +309,6 @@
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(0, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
                     break;
@@ -322,7 +317,6 @@
                     break1_datetime = moment(
                             start_datetime).add(1, 'H').add(45, 'm').toDate();
 
-                    //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
                     break;
@@ -332,7 +326,6 @@
 
             }// end-of-switch
 
-            //cashierIntervals.push(stop_datetime);
             cashier_events.datetime.push(stop_datetime);
             cashier_events.description.push("Home");
             
@@ -409,12 +402,12 @@
             var time_hour; 
             var time_min; 
 
-            // there's no delimiting colon (:) in timeStr, so we add one
+            // if there's no delimiting colon (:) in timeStr, we add one
             if (timeStr.indexOf(":") < 0) {
                 time_hour = addColon(timeStr).split(":")[0];
                 time_min = addColon(timeStr).split(":")[1];
             }
-            // there's already a delimiting colon in timeStr
+            // otherwise, there's already a delimiting colon in timeStr
             else {
                 time_hour = timeStr.split(":")[0];
                 time_min = timeStr.split(":")[1];
