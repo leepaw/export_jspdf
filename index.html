@@ -73,7 +73,7 @@
                 config: {
                     delimiter: "auto",
                     //complete: displayHTMLTable,
-                    complete: generateFormat,
+                    complete: generateSchedule,
                 },
                 before: function(file, inputElem)
                 {
@@ -93,34 +93,51 @@
 
   
 
-        function generateFormat(results) {
-              
+        function generateSchedule(results) {
+            
             var csv_data = results.data;
+            var row;
+            var cells;
+            var arr;
+
+            var cashier_name;
+            var cashier_starttime;
+            var cashier_endtime;
+            var cashier_assignment;
+            var dateTimeIntervals;
             
-            /*for(i=0;i<csv_data.length;i++){
-                var row_ = csv_data[i];
-                var cells_ = row_.join(",").split(",");
-                
-                for(j=0;j<cells_.length;j++){
-    
+            
+            // for each cashier
+            for(let d=0; d<csv_data.length; d++){
+                row = csv_data[d];
+                cells = row.join(",").split(",");
+
+                cashier_name = cells[0];
+                cashier_starttime = cells[1];
+                cashier_endtime = cells[2];
+                cashier_assignment = cells[3];
+
+                if (cashier_starttime.length < 3) {
+                    cashier_starttime = 
+                        cashier_starttime.lpad("0", 3);
                 }
-            } */
+                if (cashier_endtime.length < 3) {
+                    cashier_endtime =
+                        cashier_endtime.lpad("0", 3);
+                }
 
-            var arr = [];
-            var _name = "Neil";
-            var _startTime = "1830";
-            var _stopTime = "0300";
-            arr.push(addColon(_startTime));
-            arr.push(addColon(_stopTime));
-            var dateTimeIntervals = calculateIntervals(arr);
+                arr = [];
+                arr.push(cashier_starttime);
+                arr.push(cashier_endtime);
+                dateTimeIntervals = calculateIntervals(arr);
+               
+                alert(cashier_name);
+                for (let i=0; i<dateTimeIntervals.length; i++) {
+                    alert(dateTimeToStandardFormat(dateTimeIntervals[i]));
+                }
+                alert(toStandardFormat(addColon(cashier_endtime)));
 
-            alert(_name);
-            alert(toStandardFormat(arr[0]));
-            for (i=0; i<dateTimeIntervals.length; i++) {
-                alert(dateTimeToStandardFormat(dateTimeIntervals[i]));
-            }
-            alert(toStandardFormat(arr[1]));
-            
+            } //for-each cashier
 
             //displayHTMLTable(arr);
     
@@ -130,30 +147,134 @@
         //  and stop time (input[1]), in military format, 
         //  calculates the total hours worked and generates the breaks/lunch
         // 
-        //  return: value is an array of updated breaks/lunch for the
-        //  shift, each value is a dateTime object (in military time)
+        //  return: an array of breaks/lunch for the work shift,
+        //  each value in the array is a dateTime object (in military time)
+        //
+        //  Usage:
+        //
+        //      var arr = [];
+        //      arr.push("2000");
+        //      arr.push("100");
+        //      alert(calculateIntervals(arr))
         //
         function calculateIntervals(input) {
             var cashierIntervals = [];
+            var break1_datetime;
+            var break2_datetime;
+            var lunch_datetime;
 
-            var start_time_hr = input[0].split(":")[0];
-            var start_time_min = input[0].split(":")[1];
+            var start_time_hr = addColon(input[0]).split(":")[0];
+            var start_time_min = addColon(input[0]).split(":")[1];
 
             var start_datetime = new Date(2000, 0, 1, 
                                     parseInt(start_time_hr),
                                     parseInt(start_time_min));
 
-            var break1_datetime = moment(
+            var shift_total_hrs = getDiff2(input);
+                
+            switch (shift_total_hrs) {
+                case 8.5:
+                    break1_datetime = moment(
                             start_datetime).add(2, 'H').add(0, 'm').toDate();
-            var lunch_datetime = moment(
+                    lunch_datetime = moment(
                             start_datetime).add(4, 'H').add(15, 'm').toDate();
-            var break2_datetime = moment(
+                    break2_datetime = moment(
                             start_datetime).add(6, 'H').add(30, 'm').toDate();
-            
-            cashierIntervals.push(break1_datetime);
-            cashierIntervals.push(lunch_datetime);
-            cashierIntervals.push(break2_datetime);
 
+                    cashierIntervals.push(break1_datetime);
+                    cashierIntervals.push(lunch_datetime);
+                    cashierIntervals.push(break2_datetime);
+                    break;
+
+                case 8.25:
+                case 8.0:
+                    break1_datetime = moment(
+                            start_datetime).add(2, 'H').add(30, 'm').toDate();
+                    lunch_datetime = moment(
+                            start_datetime).add(5, 'H').add(15, 'm').toDate();
+
+                    cashierIntervals.push(break1_datetime);
+                    cashierIntervals.push(lunch_datetime);
+                    break;
+
+                case 7.75:
+                case 7.5:
+                    break1_datetime = moment(
+                            start_datetime).add(2, 'H').add(15, 'm').toDate();
+                    lunch_datetime = moment(
+                            start_datetime).add(4, 'H').add(45, 'm').toDate();
+
+                    cashierIntervals.push(break1_datetime);
+                    cashierIntervals.push(lunch_datetime);
+                    break;
+
+                case 7.25:
+                case 7.0:
+                    lunch_datetime = moment(
+                            start_datetime).add(3, 'H').add(15, 'm').toDate();
+
+                    cashierIntervals.push(lunch_datetime);
+                    break;
+
+                case 6.75:
+                case 6.5:
+                    lunch_datetime = moment(
+                            start_datetime).add(3, 'H').add(0, 'm').toDate();
+
+                    cashierIntervals.push(lunch_datetime);
+                    break;
+
+                case 6.25:
+                case 6.0:
+                    lunch_datetime = moment(
+                            start_datetime).add(2, 'H').add(45, 'm').toDate();
+
+                    cashierIntervals.push(lunch_datetime);
+                    break;
+
+                case 5.75:
+                    break1_datetime = moment(
+                            start_datetime).add(2, 'H').add(45, 'm').toDate();
+
+                    cashierIntervals.push(break1_datetime);
+                    break;
+
+                case 5.5:
+                case 5.25:
+                    break1_datetime = moment(
+                            start_datetime).add(2, 'H').add(30, 'm').toDate();
+
+                    cashierIntervals.push(break1_datetime);
+                    break;
+
+                case 5.0:
+                case 4.75:
+                    break1_datetime = moment(
+                            start_datetime).add(2, 'H').add(15, 'm').toDate();
+
+                    cashierIntervals.push(break1_datetime);
+                    break;
+
+                case 4.5:
+                case 4.25:
+                    break1_datetime = moment(
+                            start_datetime).add(2, 'H').add(0, 'm').toDate();
+
+                    cashierIntervals.push(break1_datetime);
+                    break;
+
+                case 4.0:
+                    break1_datetime = moment(
+                            start_datetime).add(1, 'H').add(45, 'm').toDate();
+
+                    cashierIntervals.push(break1_datetime);
+                    break;
+
+                default:
+                    break;
+
+            }// end-of-switch
+            
             return cashierIntervals;
         }
 
@@ -169,6 +290,7 @@
         //      arr.push("2000");
         //      arr.push("000");
         //      alert(getDiff2(arr));
+        //
         function getDiff2(input) {
             var startTime = addColon(input[0]);
             var endTime = addColon(input[1]);
@@ -232,11 +354,30 @@
         }
 
         // input: is a dateTime object (time in military format)
+        //
+        // returns: standard formatted time as string value
+        //
         function dateTimeToStandardFormat(input) {
             var parsedMilitaryTime = input.getHours().toString() +":"+
                                         input.getMinutes().toString();
 
             return toStandardFormat(parsedMilitaryTime);
+        }
+
+        //
+        // Pads leading numbers to a string representation of a number
+        // 
+        // Usage:
+        // 
+        //   var str = "5";
+        //   str.lpad("0", 3);  // result "005"
+        //
+        String.prototype.lpad = function(padString, length) {
+            var str = this;
+            while(str.length < length) {
+                str = padString + str;
+            }
+            return str;
         }
 
         
