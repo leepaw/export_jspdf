@@ -94,7 +94,6 @@
   
 
         function generateSchedule(results) {
-            
             var csv_data = results.data;
             var row;
             var cells;
@@ -105,13 +104,13 @@
             var cashier_endtime;
             var cashier_assignment;
             var curr_cashier_events;
-
-            //var cashier_event;
-            var all_events = [];
             
+            var all_events = [];
+            var new_event;
             
             // for each cashier
             for(let d=0; d<csv_data.length; d++){
+                
                 row = csv_data[d];
                 cells = row.join(",").split(",");
 
@@ -120,38 +119,44 @@
                 cashier_endtime = cells[2];
                 cashier_assignment = cells[3];
 
-                if (cashier_starttime.length < 3) {
-                    cashier_starttime = 
-                        cashier_starttime.lpad("0", 3);
+                if (cashier_name == "" || 
+                            cashier_starttime === undefined ||
+                            cashier_endtime === undefined) {
+                    break;
                 }
+
+                if (cashier_starttime.length < 3) {
+                    cashier_starttime = padZerosToString(cashier_starttime, 3);
+                }
+
+                
                 if (cashier_endtime.length < 3) {
-                    cashier_endtime =
-                        cashier_endtime.lpad("0", 3);
+                    cashier_endtime = padZerosToString(cashier_endtime, 3);
                 }
 
                 arr = [];
-                //cashier_event = [];
                 arr.push(cashier_starttime);
                 arr.push(cashier_endtime);
+                
                 curr_cashier_events = generateEvents(arr);
-               
-                //if (cashier_name == "Sopea" || cashier_name == "Marilyn") {
-                    //for (let i=0; i<cashier_events_datetime.length; i++) {
-                        //alert(dateTimeToStandardFormat(cashier_events_datetime[i]));
-                    //}
-                //}
-
                 curr_cashier_events.name = cashier_name;
                 curr_cashier_events.assignment = cashier_assignment;
-                alert(curr_cashier_events.name)
-                alert(curr_cashier_events.assignment)
-                alert(curr_cashier_events.time_military);
-                alert(curr_cashier_events.description);
 
+                
+                if (cashier_name == "Sopea" || cashier_name == "Marilyn") {
+                    for (let i=0; i<curr_cashier_events.datetime.length; i++) {
+                        new_event = [];   
+                        new_event.push(dateTimeToStandardFormat(curr_cashier_events.datetime[i]));
+                        new_event.push(curr_cashier_events.description[i]);
+                        new_event.push(curr_cashier_events.name);
+                        new_event.push(curr_cashier_events.assignment);
+                        all_events.push(new_event);
+                    }
+                }
 
             } //for-each cashier
 
-            //displayHTMLTable(arr);
+            displayHTMLTable(all_events);
     
         }
 
@@ -175,8 +180,7 @@
                 datetime: [],
                 description: [],
                 name: "",
-                assignment: "fe",
-                time_military: []
+                assignment: "fe"
             };
 
             var break1_datetime;
@@ -209,12 +213,6 @@
                     cashier_events.description.push("Break");
                     cashier_events.description.push("Lunch");
                     cashier_events.description.push("Break");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(lunch_datetime));
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break2_datetime));    
                     break;
 
                 case 8.25:
@@ -230,10 +228,6 @@
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Break");
                     cashier_events.description.push("Lunch");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 7.75:
@@ -249,10 +243,6 @@
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Break");
                     cashier_events.description.push("Lunch");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 7.25:
@@ -263,8 +253,6 @@
                     //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Lunch");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 6.75:
@@ -275,8 +263,6 @@
                     //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Lunch");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 6.25:
@@ -287,8 +273,6 @@
                     //cashierIntervals.push(lunch_datetime);
                     cashier_events.datetime.push(lunch_datetime);
                     cashier_events.description.push("Lunch");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 5.75:
@@ -298,8 +282,6 @@
                     //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 5.5:
@@ -310,8 +292,6 @@
                     //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 5.0:
@@ -322,8 +302,6 @@
                     //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 4.5:
@@ -334,8 +312,6 @@
                     //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 4.0:
@@ -345,8 +321,6 @@
                     //cashierIntervals.push(break1_datetime);
                     cashier_events.datetime.push(break1_datetime);
                     cashier_events.description.push("Break");
-                    cashier_events.time_military.push(
-                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 default:
@@ -357,8 +331,6 @@
             //cashierIntervals.push(stop_datetime);
             cashier_events.datetime.push(stop_datetime);
             cashier_events.description.push("Home");
-            cashier_events.time_military.push(
-                    dateTimeToMilitaryFormat(stop_datetime));
             
             return cashier_events;
         }
@@ -488,19 +460,18 @@
         }
 
         //
-        // Pads leading numbers to a string representation of a number
-        // 
         // Usage:
-        // 
-        //   var str = "5";
-        //   str.lpad("0", 3);  // result "005"
         //
-        String.prototype.lpad = function(padString, length) {
-            var str = this;
-            while(str.length < length) {
-                str = padString + str;
+        // var str = "5";
+        // padZerosToString(str, 3);  // result "005"
+        //
+        function padZerosToString(input, length) {
+            var _str = input;
+            while(_str.length < length) {
+                _str = "0" + _str;
             }
-            return str;
+
+            return _str;
         }
 
         
