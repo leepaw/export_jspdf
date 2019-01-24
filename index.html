@@ -104,7 +104,7 @@
             var cashier_starttime;
             var cashier_endtime;
             var cashier_assignment;
-            var dateTimeIntervals;
+            var cashier_events_datetime;
             
             
             // for each cashier
@@ -129,13 +129,12 @@
                 arr = [];
                 arr.push(cashier_starttime);
                 arr.push(cashier_endtime);
-                dateTimeIntervals = calculateIntervals(arr);
+                cashier_events_datetime = generateEvents(arr);
                
                 alert(cashier_name);
-                for (let i=0; i<dateTimeIntervals.length; i++) {
-                    alert(dateTimeToStandardFormat(dateTimeIntervals[i]));
+                for (let i=0; i<cashier_events_datetime.length; i++) {
+                    alert(dateTimeToStandardFormat(cashier_events_datetime[i]));
                 }
-                alert(toStandardFormat(addColon(cashier_endtime)));
 
             } //for-each cashier
 
@@ -143,21 +142,23 @@
     
         }
 
-        //  input: takes in an array of strings of start time (input[0]) 
-        //  and stop time (input[1]), in military format, 
-        //  calculates the total hours worked and generates the breaks/lunch
+        //  input: an array of strings that includes start time (input[0]) 
+        //  and stop time (input[1]), in military format, and
+        //  calculates the total hours worked and generates the breaks/lunch 
+        //  times.
         // 
-        //  return: an array of breaks/lunch for the work shift,
-        //  each value in the array is a dateTime object (in military time)
+        //  return: an array of breaks/lunch for a cashier's shift;
+        //  each value in the array is a dateTime object (in military time).
+        //  The stop time is the final array item as a dateTime object.
         //
         //  Usage:
         //
         //      var arr = [];
         //      arr.push("2000");
         //      arr.push("100");
-        //      alert(calculateIntervals(arr))
+        //      alert(generateEvents(arr))
         //
-        function calculateIntervals(input) {
+        function generateEvents(input) {
             var cashierIntervals = [];
             var break1_datetime;
             var break2_datetime;
@@ -165,14 +166,20 @@
 
             var start_time_hr = addColon(input[0]).split(":")[0];
             var start_time_min = addColon(input[0]).split(":")[1];
+            var stop_time_hr = addColon(input[1]).split(":")[0];
+            var stop_time_min = addColon(input[1]).split(":")[1];
 
             var start_datetime = new Date(2000, 0, 1, 
                                     parseInt(start_time_hr),
                                     parseInt(start_time_min));
 
-            var shift_total_hrs = getDiff2(input);
+            var stop_datetime = new Date(2000, 0, 1, 
+                                    parseInt(stop_time_hr),
+                                    parseInt(stop_time_min));
+
+            var total_hrs = getDiff2(input);
                 
-            switch (shift_total_hrs) {
+            switch (total_hrs) {
                 case 8.5:
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(0, 'm').toDate();
@@ -274,6 +281,8 @@
                     break;
 
             }// end-of-switch
+
+            cashierIntervals.push(stop_datetime);
             
             return cashierIntervals;
         }
