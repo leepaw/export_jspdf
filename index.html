@@ -104,9 +104,9 @@
             var cashier_starttime;
             var cashier_endtime;
             var cashier_assignment;
-            var cashier_events_datetime;
+            var curr_cashier_events;
 
-            var cashier_event;
+            //var cashier_event;
             var all_events = [];
             
             
@@ -130,16 +130,23 @@
                 }
 
                 arr = [];
+                //cashier_event = [];
                 arr.push(cashier_starttime);
                 arr.push(cashier_endtime);
-                cashier_events_datetime = generateEvents(arr);
+                curr_cashier_events = generateEvents(arr);
                
-                //if (cashier_name == "Sopea" ||
-                                //cashier_name == "Marilyn") {
-                    for (let i=0; i<cashier_events_datetime.length; i++) {
-                        alert(dateTimeToStandardFormat(cashier_events_datetime[i]));
-                    }
+                //if (cashier_name == "Sopea" || cashier_name == "Marilyn") {
+                    //for (let i=0; i<cashier_events_datetime.length; i++) {
+                        //alert(dateTimeToStandardFormat(cashier_events_datetime[i]));
+                    //}
                 //}
+
+                curr_cashier_events.name = cashier_name;
+                curr_cashier_events.assignment = cashier_assignment;
+                alert(curr_cashier_events.name)
+                alert(curr_cashier_events.assignment)
+                alert(curr_cashier_events.time_military);
+                alert(curr_cashier_events.description);
 
 
             } //for-each cashier
@@ -152,10 +159,9 @@
         //  and stop time (input[1]), in military format, and
         //  calculates the total hours worked and generates the breaks/lunch 
         //  times.
-        // 
-        //  return: an array of breaks/lunch for a cashier's shift;
-        //  each value in the array is a dateTime object (in military time).
-        //  The stop time is the final array item as a dateTime object.
+        //
+        //  returns: an object with all the events for the cashier
+        //
         //
         //  Usage:
         //
@@ -165,7 +171,14 @@
         //      alert(generateEvents(arr))
         //
         function generateEvents(input) {
-            var cashierIntervals = [];
+            var cashier_events = {
+                datetime: [],
+                description: [],
+                name: "",
+                assignment: "fe",
+                time_military: []
+            };
+
             var break1_datetime;
             var break2_datetime;
             var lunch_datetime;
@@ -176,6 +189,8 @@
 
             var total_hrs = getDiff2(input);
                 
+            //dateTimeToMilitaryFormat
+
             switch (total_hrs) {
                 case 8.5:
                     break1_datetime = moment(
@@ -185,9 +200,21 @@
                     break2_datetime = moment(
                             start_datetime).add(6, 'H').add(30, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
-                    cashierIntervals.push(lunch_datetime);
-                    cashierIntervals.push(break2_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(lunch_datetime);
+                    //cashierIntervals.push(break2_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.datetime.push(lunch_datetime);
+                    cashier_events.datetime.push(break2_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.description.push("Lunch");
+                    cashier_events.description.push("Break");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(lunch_datetime));
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break2_datetime));    
                     break;
 
                 case 8.25:
@@ -197,8 +224,16 @@
                     lunch_datetime = moment(
                             start_datetime).add(5, 'H').add(15, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
-                    cashierIntervals.push(lunch_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(lunch_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.datetime.push(lunch_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.description.push("Lunch");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 7.75:
@@ -208,8 +243,16 @@
                     lunch_datetime = moment(
                             start_datetime).add(4, 'H').add(45, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
-                    cashierIntervals.push(lunch_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(lunch_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.datetime.push(lunch_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.description.push("Lunch");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 7.25:
@@ -217,7 +260,11 @@
                     lunch_datetime = moment(
                             start_datetime).add(3, 'H').add(15, 'm').toDate();
 
-                    cashierIntervals.push(lunch_datetime);
+                    //cashierIntervals.push(lunch_datetime);
+                    cashier_events.datetime.push(lunch_datetime);
+                    cashier_events.description.push("Lunch");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 6.75:
@@ -225,7 +272,11 @@
                     lunch_datetime = moment(
                             start_datetime).add(3, 'H').add(0, 'm').toDate();
 
-                    cashierIntervals.push(lunch_datetime);
+                    //cashierIntervals.push(lunch_datetime);
+                    cashier_events.datetime.push(lunch_datetime);
+                    cashier_events.description.push("Lunch");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 6.25:
@@ -233,14 +284,22 @@
                     lunch_datetime = moment(
                             start_datetime).add(2, 'H').add(45, 'm').toDate();
 
-                    cashierIntervals.push(lunch_datetime);
+                    //cashierIntervals.push(lunch_datetime);
+                    cashier_events.datetime.push(lunch_datetime);
+                    cashier_events.description.push("Lunch");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(lunch_datetime));
                     break;
 
                 case 5.75:
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(45, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 5.5:
@@ -248,7 +307,11 @@
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(30, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 5.0:
@@ -256,7 +319,11 @@
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(15, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 4.5:
@@ -264,14 +331,22 @@
                     break1_datetime = moment(
                             start_datetime).add(2, 'H').add(0, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 case 4.0:
                     break1_datetime = moment(
                             start_datetime).add(1, 'H').add(45, 'm').toDate();
 
-                    cashierIntervals.push(break1_datetime);
+                    //cashierIntervals.push(break1_datetime);
+                    cashier_events.datetime.push(break1_datetime);
+                    cashier_events.description.push("Break");
+                    cashier_events.time_military.push(
+                        dateTimeToMilitaryFormat(break1_datetime));
                     break;
 
                 default:
@@ -279,9 +354,13 @@
 
             }// end-of-switch
 
-            cashierIntervals.push(stop_datetime);
+            //cashierIntervals.push(stop_datetime);
+            cashier_events.datetime.push(stop_datetime);
+            cashier_events.description.push("Home");
+            cashier_events.time_military.push(
+                    dateTimeToMilitaryFormat(stop_datetime));
             
-            return cashierIntervals;
+            return cashier_events;
         }
 
 
@@ -339,17 +418,31 @@
 
         //
         // input (timeStr): string value representing the time in military format
-        //                  without the colon
         //
         // return: DateTime object representing the time
         //
         // Usage:
         //
         //    alert(toDateTime("1600"));
+        //         
+        //    -----or-----
+        //
+        //    alert(toDateTime("16:00"));
         //
         function toDateTime(timeStr) {
-            var time_hour = addColon(timeStr).split(":")[0];
-            var time_min = addColon(timeStr).split(":")[1];
+            var time_hour; 
+            var time_min; 
+
+            // there's no delimiting colon (:) in timeStr, so we add one
+            if (timeStr.indexOf(":") < 0) {
+                time_hour = addColon(timeStr).split(":")[0];
+                time_min = addColon(timeStr).split(":")[1];
+            }
+            // there's already a delimiting colon in timeStr
+            else {
+                time_hour = timeStr.split(":")[0];
+                time_min = timeStr.split(":")[1];
+            }
 
             var _datetime = new Date(2000, 0, 1,
                                     parseInt(time_hour),
@@ -383,6 +476,15 @@
                                         input.getMinutes().toString();
 
             return toStandardFormat(parsedMilitaryTime);
+        }
+
+        //
+        // input: is a dateTime object
+        //
+        // returns: string representing time in military format (i.e. "1600")
+        //
+        function dateTimeToMilitaryFormat(input) {
+            return toMilitaryFormat(dateTimeToStandardFormat(input));
         }
 
         //
