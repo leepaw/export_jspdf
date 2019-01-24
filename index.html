@@ -105,6 +105,9 @@
             var cashier_endtime;
             var cashier_assignment;
             var cashier_events_datetime;
+
+            var cashier_event;
+            var all_events = [];
             
             
             // for each cashier
@@ -131,10 +134,13 @@
                 arr.push(cashier_endtime);
                 cashier_events_datetime = generateEvents(arr);
                
-                alert(cashier_name);
-                for (let i=0; i<cashier_events_datetime.length; i++) {
-                    alert(dateTimeToStandardFormat(cashier_events_datetime[i]));
-                }
+                //if (cashier_name == "Sopea" ||
+                                //cashier_name == "Marilyn") {
+                    for (let i=0; i<cashier_events_datetime.length; i++) {
+                        alert(dateTimeToStandardFormat(cashier_events_datetime[i]));
+                    }
+                //}
+
 
             } //for-each cashier
 
@@ -164,18 +170,9 @@
             var break2_datetime;
             var lunch_datetime;
 
-            var start_time_hr = addColon(input[0]).split(":")[0];
-            var start_time_min = addColon(input[0]).split(":")[1];
-            var stop_time_hr = addColon(input[1]).split(":")[0];
-            var stop_time_min = addColon(input[1]).split(":")[1];
-
-            var start_datetime = new Date(2000, 0, 1, 
-                                    parseInt(start_time_hr),
-                                    parseInt(start_time_min));
-
-            var stop_datetime = new Date(2000, 0, 1, 
-                                    parseInt(stop_time_hr),
-                                    parseInt(stop_time_min));
+            // get the DateTime objects for starting and stopping times
+            var start_datetime = toDateTime(input[0]);
+            var stop_datetime = toDateTime(input[1]);            
 
             var total_hrs = getDiff2(input);
                 
@@ -288,8 +285,8 @@
         }
 
 
-        // input: must be military time: input[0] is starttime 
-        // and input[1] is endtime
+        // input: input[0] is starttime and input[1] is endtime, 
+        //        they must be in military format
         //
         // returns: a floating point number - the total hours and minutes worked
         //           (e.g. 7.5)
@@ -301,17 +298,12 @@
         //      alert(getDiff2(arr));
         //
         function getDiff2(input) {
-            var startTime = addColon(input[0]);
-            var endTime = addColon(input[1]);
-            var startTimeHour = startTime.split(":")[0];
-            var startTimeMins = startTime.split(":")[1];
-            var endTimeHour = endTime.split(":")[0];
-            var endTimeMins = endTime.split(":")[1];
 
-            var date1 = new Date(2000, 0, 1, 
-               parseInt(startTimeHour), parseInt(startTimeMins));  // start time
-            var date2 = new Date(2000, 0, 1, 
-               parseInt(endTimeHour), parseInt(endTimeMins));   // end time
+            // get the DateTime object for the start time
+            var date1 = toDateTime(input[0]);
+
+            // get the DateTime object for the end time
+            var date2 = toDateTime(input[1]);
 
             if (date2 < date1) {
                 date2.setDate(date2.getDate() + 1);
@@ -343,6 +335,26 @@
 
             var diffResult = parseFloat(hrs) + parseFloat(mins)/60;
             return diffResult;
+        }
+
+        //
+        // input (timeStr): string value representing the time in military format
+        //                  without the colon
+        //
+        // return: DateTime object representing the time
+        //
+        // Usage:
+        //
+        //    alert(toDateTime("1600"));
+        //
+        function toDateTime(timeStr) {
+            var time_hour = addColon(timeStr).split(":")[0];
+            var time_min = addColon(timeStr).split(":")[1];
+
+            var _datetime = new Date(2000, 0, 1,
+                                    parseInt(time_hour),
+                                    parseInt(time_min));
+            return _datetime;
         }
 
 
