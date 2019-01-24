@@ -126,15 +126,6 @@
                     break;
                 }
 
-                if (cashier_starttime.length < 3) {
-                    cashier_starttime = padZerosToString(cashier_starttime, 3);
-                }
-
-                
-                if (cashier_endtime.length < 3) {
-                    cashier_endtime = padZerosToString(cashier_endtime, 3);
-                }
-
                 arr = [];
                 arr.push(cashier_starttime);
                 arr.push(cashier_endtime);
@@ -182,7 +173,7 @@
         //
         //      var arr = [];
         //      arr.push("2000");
-        //      arr.push("100");
+        //      arr.push("1:00");
         //      alert(generateEvents(arr))
         //
         function generateEvents(input) {
@@ -190,7 +181,7 @@
                 datetime: [],
                 description: [],
                 name: "",
-                assignment: "fe"
+                assignment: ""
             };
 
             var break1_datetime;
@@ -342,7 +333,7 @@
         // 
         //      var arr = [];
         //      arr.push("2000");
-        //      arr.push("000");
+        //      arr.push("0:00");
         //      alert(getDiff2(arr));
         //
         function getDiff2(input) {
@@ -386,7 +377,7 @@
         }
 
         //
-        // input (timeStr): string value representing the time in military format
+        // input: string value representing the time in military format
         //
         // return: DateTime object representing the time
         //
@@ -398,12 +389,19 @@
         //
         //    alert(toDateTime("16:00"));
         //
-        function toDateTime(timeStr) {
+        function toDateTime(input) {
             var time_hour; 
             var time_min; 
+            var timeStr = input;
 
-            // if there's no delimiting colon (:) in timeStr, we add one
+            // if there's no delimiting colon (:) in the time string
             if (timeStr.indexOf(":") < 0) {
+                
+                // make sure it's at least 3 digits with leading zeros
+                if (timeStr.length < 3) {
+                    timeStr = padZerosToString(timeStr, 3);
+                }
+
                 time_hour = addColon(timeStr).split(":")[0];
                 time_min = addColon(timeStr).split(":")[1];
             }
